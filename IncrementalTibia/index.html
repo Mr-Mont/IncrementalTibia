@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Tibia Incremental</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .log {
+            width: 100%;
+            padding: 10px;
+            background-color: #222;
+            border: 1px solid #444;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .log-container {
+            height: 150px;
+            overflow-y: auto;
+            color: #fff;
+            font-size: 14px;
+        }
+        .log-entry {
+            margin: 5px 0;
+        }
+        .log-entry.success {
+            color: #90ee90;
+        }
+        .section {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="sidebar">
+            <button class="sidebar-button" data-section="personagem">Personagem</button>
+            <button class="sidebar-button" data-section="inventario">Inventário</button>
+            <button class="sidebar-button" data-section="treino">Treino</button>
+            <button class="sidebar-button" data-section="caca">Caça</button>
+            <button class="sidebar-button" data-section="quests">Quests</button>
+            <button class="sidebar-button" data-section="shop">Shop</button>
+            <button class="sidebar-button" data-section="reset" style="color: red;">RESET</button>
+        </div>
+        <div class="main-content">
+            <div class="section" id="personagem">
+                <div class="player-stats">
+                    <h2 id="character-name"></h2>
+                    <div class="outfit-section">
+                        <h3>Seu Outfit</h3>
+                        <div class="outfit-display">
+                            <div id="outfit-sprite-container">
+                                <img id="outfit-sprite" src="" alt="Seu Personagem">
+                            </div>
+                            <div class="outfit-controls">
+                                <div class="outfit-selector">
+                                    <button id="prev-outfit"><</button>
+                                    <span id="outfit-name">Citizen</span>
+                                    <button id="next-outfit">></button>
+                                </div>
+                                <div class="gender-selector">
+                                    <button id="gender-male" class="gender-button active">Masculino</button>
+                                    <button id="gender-female" class="gender-button">Feminino</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p>Nível: <span id="level"></span></p>
+                    <div class="stat-bar">
+                        <label>HP:</label>
+                        <div class="bar-container">
+                            <div id="hp-bar" class="bar hp-bar"></div>
+                            <div class="bar-values">
+                                <span id="hp"></span>/<span id="max-hp"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-bar">
+                        <label>MP:</label>
+                        <div class="bar-container">
+                            <div id="mp-bar" class="bar mp-bar"></div>
+                            <div class="bar-values">
+                                <span id="mp"></span>/<span id="max-mp"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-bar">
+                        <label>EXP:</label>
+                        <div class="bar-container">
+                            <div id="xp-bar" class="bar xp-bar"></div>
+                            <div class="bar-values">
+                                <span id="xp"></span>/<span id="xp-to-level"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Skills</h3>
+                    <div class="stat-bar">
+                        <label>Magic Level:</label>
+                        <div class="bar-container">
+                            <div id="magic-level-bar" class="bar skill-bar"></div>
+                            <div class="bar-values">
+                                <span id="magic-level"></span> (<span id="magic-xp"></span>)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-bar">
+                        <label>Sword:</label>
+                        <div class="bar-container">
+                            <div id="sword-bar" class="bar skill-bar"></div>
+                            <div class="bar-values">
+                                <span id="sword-level"></span> (<span id="sword-xp"></span>)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-bar">
+                        <label>Axe:</label>
+                        <div class="bar-container">
+                            <div id="axe-bar" class="bar skill-bar"></div>
+                            <div class="bar-values">
+                                <span id="axe-level"></span> (<span id="axe-xp"></span>)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-bar">
+                        <label>Club:</label>
+                        <div class="bar-container">
+                            <div id="club-bar" class="bar skill-bar"></div>
+                            <div class="bar-values">
+                                <span id="club-level"></span> (<span id="club-xp"></span>)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-bar">
+                        <label>Distance:</label>
+                        <div class="bar-container">
+                            <div id="distance-bar" class="bar skill-bar"></div>
+                            <div class="bar-values">
+                                <span id="distance-level"></span> (<span id="distance-xp"></span>)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-bar">
+                        <label>Shielding:</label>
+                        <div class="bar-container">
+                            <div id="shielding-bar" class="bar skill-bar"></div>
+                            <div class="bar-values">
+                                <span id="shielding-level"></span> (<span id="shielding-xp"></span>)
+                            </div>
+                        </div>
+                    </div>
+                    <p>Saldo: <span id="saldo">0</span> gold</p>
+                    <p>Vocação: <span id="vocacao"></span></p>
+                </div>
+                <div class="log">
+                    <div id="personagem-log" class="log-container"></div>
+                </div>
+            </div>
+            <div class="section" id="inventario" style="display: none;">
+                <div class="inventory">
+                    <h2>Inventário</h2>
+                    <div class="inventory-grid">
+                        <div class="inventory-slot" data-slot="01" data-index="amulet">
+                            <img src="assets/images/itens/inventory/01.gif" alt="Amuleto">
+                        </div>
+                        <div class="inventory-slot" data-slot="02" data-index="helmet">
+                            <img src="assets/images/itens/inventory/02.gif" alt="Capuz">
+                        </div>
+                        <div class="inventory-slot" data-slot="03" data-index="backpack">
+                            <img src="assets/images/itens/inventory/03.gif" alt="Mochila">
+                        </div>
+                        <div class="inventory-slot" data-slot="04" data-index="weapon">
+                            <img src="assets/images/itens/inventory/04.gif" alt="Espada">
+                        </div>
+                        <div class="inventory-slot" data-slot="05" data-index="armor">
+                            <img src="assets/images/itens/inventory/05.gif" alt="Armadura">
+                        </div>
+                        <div class="inventory-slot" data-slot="06" data-index="shield">
+                            <img src="assets/images/itens/inventory/06.gif" alt="Escudo">
+                        </div>
+                        <div class="inventory-slot" data-slot="07" data-index="ring">
+                            <img src="assets/images/itens/inventory/07.gif" alt="Anel">
+                        </div>
+                        <div class="inventory-slot" data-slot="08" data-index="legs">
+                            <img src="assets/images/itens/inventory/08.gif" alt="Calça">
+                        </div>
+                        <div class="inventory-slot" data-slot="09" data-index="arrow">
+                            <img src="assets/images/itens/inventory/09.gif" alt="Flecha">
+                        </div>
+                        <div class="inventory-slot boot-slot" data-slot="10" data-index="boots">
+                            <img src="assets/images/itens/inventory/10.gif" alt="Botas">
+                        </div>
+                    </div>
+                    <h3>Mochila</h3>
+                    <div class="backpack-grid">
+                        <div class="backpack-slot" data-slot="01" data-index="0"></div>
+                        <div class="backpack-slot" data-slot="02" data-index="1"></div>
+                        <div class="backpack-slot" data-slot="03" data-index="2"></div>
+                        <div class="backpack-slot" data-slot="04" data-index="3"></div>
+                        <div class="backpack-slot" data-slot="05" data-index="4"></div>
+                        <div class="backpack-slot" data-slot="06" data-index="5"></div>
+                        <div class="backpack-slot" data-slot="07" data-index="6"></div>
+                        <div class="backpack-slot" data-slot="08" data-index="7"></div>
+                        <div class="backpack-slot" data-slot="09" data-index="8"></div>
+                        <div class="backpack-slot" data-slot="10" data-index="9"></div>
+                        <div class="backpack-slot" data-slot="11" data-index="10"></div>
+                        <div class="backpack-slot" data-slot="12" data-index="11"></div>
+                        <div class="backpack-slot" data-slot="13" data-index="12"></div>
+                        <div class="backpack-slot" data-slot="14" data-index="13"></div>
+                        <div class="backpack-slot" data-slot="15" data-index="14"></div>
+                        <div class="backpack-slot" data-slot="16" data-index="15"></div>
+                        <div class="backpack-slot" data-slot="17" data-index="16"></div>
+                        <div class="backpack-slot" data-slot="18" data-index="17"></div>
+                        <div class="backpack-slot" data-slot="19" data-index="18"></div>
+                        <div class="backpack-slot" data-slot="20" data-index="19"></div>
+                    </div>
+                    <div class="special-slots">
+                        <div class="special-slot trash-slot" data-slot="11" data-index="-1">
+                            <img src="assets/images/itens/inventory/trashcan.png" alt="Lixo" title="Arraste um item para deletar">
+                        </div>
+                        <div class="special-slot sell-slot" data-slot="12" data-index="-1">
+                            <img src="assets/images/itens/gold_coin.gif" alt="Sell Slot" title="Arraste um item para vender (1/3 do preço)">
+                        </div>
+                    </div>
+                </div>
+                <div class="log">
+                    <div id="inventario-log" class="log-container"></div>
+                </div>
+            </div>
+            <div class="section" id="treino" style="display: none;">
+                <div class="trainer-container">
+                    <h2>Trainer</h2>
+                    <div id="trainer-image-container">
+                        <img src="assets/images/creatures/trainer.gif" alt="Trainer">
+                    </div>
+                    <div class="stat-bar">
+                        <label>HP:</label>
+                        <div class="bar-container">
+                            <div id="trainer-hp-bar" class="bar hp-bar"></div>
+                            <div class="bar-values">
+                                <span id="trainer-hp">-</span>/<span id="trainer-max-hp">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p>Nome: <span>Trainer</span></p>
+                    <button id="start-training" disabled>Começar Treino</button>
+                    <button id="stop-training" disabled>Parar Treino</button>
+                </div>
+                <div class="log">
+                    <div id="treino-log" class="log-container"></div>
+                </div>
+            </div>
+            <div class="section" id="caca" style="display: none;">
+                <div class="actions">
+                    <h2>Ações</h2>
+                    <div class="monster-dropdown">
+                        <div id="dropdown-button">Escolha um monstro</div>
+                        <div id="monster-list" class="dropdown-content"></div>
+                    </div>
+                    <div class="action-buttons">
+                        <button id="hunt-button" disabled>Caçar</button>
+                        <button id="stop-button" disabled>Parar</button>
+                    </div>
+                </div>
+                <div class="combat-stats">
+                    <div class="player-stats-combat">
+                        <h3>Status do Personagem</h3>
+                        <div class="stat-bar">
+                            <label>HP:</label>
+                            <div class="bar-container">
+                                <div id="combat-hp-bar" class="bar hp-bar"></div>
+                                <div class="bar-values">
+                                    <span id="combat-hp"></span>/<span id="combat-max-hp"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-bar">
+                            <label>MP:</label>
+                            <div class="bar-container">
+                                <div id="combat-mp-bar" class="bar mp-bar"></div>
+                                <div class="bar-values">
+                                    <span id="combat-mp"></span>/<span id="combat-max-mp"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="potion-buttons">
+                            <!-- Botões de poções serão adicionados dinamicamente -->
+                        </div>
+                    </div>
+                    <div class="monster-stats">
+                        <h2 id="monster-title"></h2>
+                        <div id="monster-image-container"></div>
+                        <div class="stat-bar">
+                            <label>HP:</label>
+                            <div class="bar-container">
+                                <div id="monster-hp-bar" class="bar hp-bar"></div>
+                                <div class="bar-values">
+                                    <span id="monster-hp">-</span>/<span id="monster-max-hp">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="log">
+                    <div id="combat-log" class="log-container"></div>
+                </div>
+            </div>
+            <div class="section" id="quests" style="display: none;">
+                <h2>Quests</h2>
+                <ul id="tasks-list">
+                    <!-- Tasks serão preenchidas dinamicamente -->
+                </ul>
+                <div class="log">
+                    <div id="tasks-log" class="log-container"></div>
+                </div>
+            </div>
+            <div class="section" id="shop" style="display: none;">
+                <h2>Shop</h2>
+                <!-- Conteúdo será adicionado dinamicamente por shop.js -->
+                <div class="log">
+                    <div id="shop-log" class="log-container"></div>
+                </div>
+            </div>
+            <div class="section" id="reset" style="display: none;">
+                <h2>Resetar Jogo</h2>
+                <p>Clique em "Confirmar" para realizar o Hard Reset e redefinir seu personagem.</p>
+                <button id="confirm-reset" style="color: red;">Confirmar</button>
+                <div class="log">
+                    <div id="reset-log" class="log-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="js/outfits.js" defer></script>
+    <script type="module" src="js/game.js" defer></script>
+    <script type="module" src="js/shop.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const buttons = document.querySelectorAll('.sidebar-button');
+            const sections = document.querySelectorAll('.section');
+
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const sectionId = button.getAttribute('data-section');
+                    sections.forEach(section => {
+                        section.style.display = section.id === sectionId ? 'block' : 'none';
+                    });
+                    if (sectionId === 'reset') {
+                        document.getElementById('confirm-reset').focus();
+                    }
+                });
+            });
+
+            document.getElementById('personagem').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

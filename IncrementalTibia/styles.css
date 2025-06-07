@@ -1,0 +1,820 @@
+body {
+    font-family: Arial, sans-serif;
+    background: url('assets/background.gif') repeat;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.game-container {
+    display: flex;
+    height: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 150px;
+    background-color: #2a2a2a;
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 2px solid #555;
+    position: fixed;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+.sidebar-button {
+    width: 120px;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #555;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.sidebar-button:hover {
+    background-color: #777;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    margin-left: 150px;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.section {
+    display: none;
+    text-align: center;
+    width: 100%;
+    max-width: 800px;
+}
+
+.player-stats-combat {
+    width: 200px;
+    padding: 15px;
+    background-color: #3a3a3a;
+    border: 1px solid #666;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin: 10px 0;
+}
+
+/* Ajuste dos botões de poção para não ultrapassar a borda */
+.player-stats-combat .potion-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.player-stats-combat .potion-buttons button {
+    padding: 6px 10px;
+    background-color: #555;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+.player-stats-combat .potion-buttons button:disabled {
+    background-color: #333;
+    cursor: not-allowed;
+}
+
+.player-stats-combat .potion-buttons button:hover:not(:disabled) {
+    background-color: #777;
+}
+
+.inventory {
+    width: 260px;
+    padding: 10px;
+    background-color: #3a3a3a;
+    border: 1px solid #666;
+    border-radius: 5px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: 40px 40px 40px;
+    grid-template-rows: repeat(4, 40px);
+    gap: 5px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+/* Correção do posicionamento dos slots fixos para centralização com a coluna 2 */
+.inventory-slot {
+    width: 40px;
+    height: 40px;
+    background-color: #222;
+    border: 1px solid #666;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.inventory-slot[data-slot="01"],
+.inventory-slot[data-slot="04"],
+.inventory-slot[data-slot="07"],
+.inventory-slot[data-slot="03"],
+.inventory-slot[data-slot="06"],
+.inventory-slot[data-slot="09"] {
+    margin-top: 20px;
+}
+
+.boot-slot {
+    grid-column: 2;
+    grid-row: 4;
+    margin: 0;
+}
+
+.inventory-slot img {
+    width: 32px;
+    height: 32px;
+}
+
+.backpack-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 40px);
+    grid-template-rows: repeat(5, 40px);
+    gap: 5px;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.backpack-slot {
+    width: 40px;
+    height: 40px;
+    background-color: #222;
+    border: 1px solid #666;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.backpack-slot img {
+    width: 32px;
+    height: 32px;
+}
+
+.special-slots {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+.special-slot {
+    width: 40px;
+    height: 40px;
+    background-color: #222;
+    border: 1px solid #666;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.trash-slot img {
+    width: 32px;
+    height: 32px;
+}
+
+.sell-slot img {
+    width: 32px;
+    height: 32px;
+}
+
+.item-count {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 12px;
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 0 4px;
+    border-radius: 3px;
+}
+
+.potion-count {
+    font-size: 14px;
+    margin-left: 5px;
+    color: #fff;
+}
+
+.player-stats,
+.monster-stats {
+    width: 200px;
+    padding: 15px;
+    background-color: #3a3a3a;
+    border: 1px solid #666;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Redesenho da tela de caça */
+#caca {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 800px;
+}
+
+.combat-stats {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+}
+
+.monster-stats {
+    width: 200px;
+    padding: 15px;
+    background-color: #3a3a3a;
+    border: 1px solid #666;
+    border-radius: 5px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.monster-stats h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+}
+
+#monster-image-container {
+    margin: 10px 0;
+    text-align: center;
+}
+
+#monster-image-container img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+}
+
+.monster-stats .stat-bar {
+    margin: 10px 0 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.monster-stats .bar-container {
+    width: 80%;
+    height: 20px;
+    background-color: #222;
+    border: 1px solid #666;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.monster-stats .hp-bar {
+    background-color: #ff4444;
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.monster-stats .bar-values {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.actions {
+    padding: 10px;
+    background-color: #3a3a3a;
+    border: 1px solid #666;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.monster-dropdown {
+    position: relative;
+    display: inline-block;
+    margin: 5px 5px 10px 5px;
+}
+
+#dropdown-button {
+    padding: 8px 15px;
+    background-color: #555;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    width: 200px;
+    text-align: left;
+}
+
+#dropdown-button:hover {
+    background-color: #777;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #555;
+    width: 200px;
+    border-radius: 3px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content.show {
+    display: block;
+}
+
+.monster-option {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.monster-option:hover {
+    background-color: #777;
+}
+
+.monster-option img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.actions button {
+    padding: 8px 15px;
+    background-color: #555;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.actions button:disabled {
+    background-color: #333;
+    cursor: not-allowed;
+}
+
+.actions button:hover:not(:disabled) {
+    background-color: #777;
+}
+
+/* Ajuste do log */
+.log {
+    position: fixed;
+    bottom: 10px;
+    left: 160px;
+    right: 10px;
+    height: 150px;
+    padding: 10px;
+    background-color: #222;
+    border: 1px solid #666;
+    border-radius: 5px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 160px);
+    z-index: 50;
+}
+
+#log-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    font-size: 14px;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.log-entry {
+    margin: 5px 0;
+    word-wrap: break-word;
+}
+
+.log-entry.success {
+    color: #00ff00;
+}
+
+#trainer-image-container {
+    margin: 10px 0;
+    text-align: center;
+}
+
+#trainer-image-container img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+}
+
+.stat-bar {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.stat-bar label {
+    width: 100px;
+    font-size: 14px;
+}
+
+.bar-container {
+    position: relative;
+    width: 100%;
+    height: 20px;
+    background-color: #222;
+    border: 1px solid #666;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.bar {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.hp-bar {
+    background-color: #ff4444;
+}
+
+.mp-bar {
+    background-color: #4444ff;
+}
+
+.xp-bar {
+    background-color: #44ff44;
+}
+
+.skill-bar {
+    background-color: #ffaa44;
+}
+
+.bar-values {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+/* Barra de progresso para quests */
+#quests .progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #222;
+    border: 1px solid #666;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+#quests .progress {
+    height: 100%;
+    background-color: #44ff44;
+    transition: width 0.3s ease;
+}
+
+/* Estilos para a loja em slots */
+.shop-inventory {
+    padding: 10px;
+}
+
+.shop-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.tab-button {
+    padding: 8px 15px;
+    background-color: #555;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.tab-button.active {
+    background-color: #777;
+}
+
+.tab-button:hover {
+    background-color: #777;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content h3 {
+    margin: 0 0 10px 0;
+}
+
+.shop-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.shop-slot {
+    border: 1px solid #ccc;
+    padding: 5px;
+    text-align: center;
+    background: #f9f9f9;
+}
+
+.shop-slot img {
+    width: 32px;
+    height: 32px;
+}
+
+.item-info {
+    font-size: 12px;
+    color: #333;
+}
+
+.item-info span {
+    display: block;
+}
+
+.buy-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 2px 5px;
+    cursor: pointer;
+}
+
+.buy-button:hover {
+    background-color: #45a049;
+}
+
+/* Removido .shop-item, pois não é mais usado */
+#monster-hp-bar {
+    background-color: #ff4444;
+}
+
+#trainer-hp-bar {
+    background-color: #ff4444;
+}
+
+#combat-hp-bar {
+    background-color: #ff4444;
+}
+
+#combat-mp-bar {
+    background-color: #4444ff;
+}
+
+.shop-inventory {
+    padding: 10px;
+    background-color: #3a3a3a;
+    border: 1px solid #666;
+    border-radius: 5px;
+}
+
+.shop-slot {
+    border: 1px solid #666;
+    padding: 5px;
+    text-align: center;
+    background: #2a2a2a;
+}
+
+.item-info {
+    font-size: 12px;
+    color: #fff;
+}
+
+.buy-button {
+    background-color: #555;
+    color: #fff;
+    border: none;
+    padding: 2px 5px;
+    cursor: pointer;
+}
+
+.buy-button:hover {
+    background-color: #777;
+}
+
+.inventory-slot.drag-over,
+.backpack-slot.drag-over {
+    border: 2px solid #fff;
+}
+
+/* Estilos para a seção de outfits */
+.outfit-section {
+    margin: 20px 0;
+    padding: 10px;
+    background-color: #3a3a3a;
+    border: 1px solid #666;
+    border-radius: 5px;
+}
+
+.outfit-display {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+#outfit-sprite-container {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #222;
+    border: 1px solid #666;
+    border-radius: 5px;
+}
+
+#outfit-sprite {
+    width: 64px;
+    height: 64px;
+}
+
+.outfit-controls {
+    flex: 1;
+}
+
+.outfit-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+#prev-outfit, #next-outfit {
+    padding: 5px 10px;
+    background-color: #555;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#prev-outfit:hover, #next-outfit:hover {
+    background-color: #777;
+}
+
+#outfit-name {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.gender-selector {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.gender-button {
+    padding: 5px 10px;
+    background-color: #555;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.gender-button.active {
+    background-color: #777;
+}
+
+.gender-button:hover {
+    background-color: #777;
+}
+
+.color-picker h4 {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.color-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 20px);
+    gap: 2px;
+}
+
+.color-swatch {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #666;
+    cursor: pointer;
+}
+
+.color-swatch:hover {
+    border: 1px solid #fff;
+}
+
+.color-swatch.selected {
+    border: 2px solid #fff;
+}
+
+.tooltip {
+    visibility: hidden;
+    width: 200px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1000;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    pointer-events: none;
+}
+
+.inventory-slot:hover .tooltip,
+.backpack-slot:hover .tooltip,
+.shop-slot:hover .tooltip {
+    visibility: visible;
+}
+
+.tooltip {
+    visibility: hidden;
+    width: 200px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1000;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    pointer-events: none;
+}
+
+.inventory-slot:hover .tooltip,
+.backpack-slot:hover .tooltip,
+.shop-slot:hover .tooltip {
+    visibility: visible;
+}
